@@ -1,55 +1,46 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import './AddUser.css';
+import classes from './AddUser.module.css';
+import Card from '../UI/Card';
+import Button from '../UI/Button';
 
-   
+
 const AddUser = (props) => {
-    const [emptyName,setName] = useState('');
-     const [emptyAge,setAge]= useState('');
-    const[isValid,setIsValid]= useState(true);
+    const [enteredUsername, setEnteredUserName] = useState('');
+    const [enteredAge, setEnteredAge] = useState('');
 
-    const nameChangeHandler = (event) =>{
-        if(event.target.value.trim().length > 0){
-            setIsValid(true);
-        }
-        setName(event.target.value);
-    }
-    const ageChangeHandler = (event) =>{
-        setAge(event.target.value);
-    }
-   
-    const formSubmitHandler = (event) =>{
+    const addUserHandler = (event) => {
         event.preventDefault();
-        if(emptyName.trim().length === 0 || emptyAge.trim().length === 0){
-            setIsValid(false);
+        if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
             return;
         }
-        const userDetails ={
-            key: Math.random().toString(),
-            name:emptyName,
-            age:emptyAge,
+        if (+enteredAge < 1) {
+            return;
         }
-        props.onSaveUser(userDetails);
-        setName('');
-        setAge('');
+        console.log(enteredUsername, enteredAge);
+        setEnteredUserName('');
+        setEnteredAge('');
+
     }
 
+    const usernameChangeHandler = (event) => {
+        setEnteredUserName(event.target.value);
+    }
+    const ageChangeHandler = (event) => {
+        setEnteredAge(event.target.value);
+    }
+
+
     return (
-        <div className='Card'>
-            <form onSubmit={formSubmitHandler}>
-                <div className='new-expense__controls'>
-                <div className='new-expense__control'>
-                    <label type="text">User Name</label>
-                    <input type='text' value={emptyName} onChange={nameChangeHandler}/>
-                </div>
-                <div className='new-expense__control'>
-                    <label type="number">Age</label>
-                    <input type='number' value={emptyAge} onChange={ageChangeHandler} />
-                </div>
-                </div>
-                <button className={`new-expense__actions ${!isValid ? 'isValid' : ''}`} type='submit'>Add User</button>
+        <Card className={classes.input}>
+            <form onSubmit={addUserHandler}>
+                <label htmlFor='username'>User Name</label>
+                <input id='username' type='text' value={enteredUsername} onChange={usernameChangeHandler} />
+                <label htmlFor='age'>Age</label>
+                <input id='age' type='number' value={enteredAge} onChange={ageChangeHandler} />
+                <Button type='submit'>Add User</Button>
             </form>
-        </div>
+        </Card>
     )
 }
 
